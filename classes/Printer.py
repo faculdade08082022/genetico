@@ -9,7 +9,7 @@ class Printer:
 
     def print(self, populacao, p):
         #print(populacao)
-        print(p)
+        #print(p)
 
         self.canvas.delete("all")
 
@@ -58,7 +58,9 @@ class Printer:
         populacao[p].fitness = value
 
         if (p < len(populacao) - 1):
-            self.canvas.after(2000, lambda: self.print(populacao, p + 1))
+            self.canvas.after(1, lambda: self.print(populacao, p + 1))
+        else:
+            self.master.destroy()
 
     def getQuantidadeCor(self, canvas):
         width = int(self.canvas["width"])
