@@ -1,5 +1,10 @@
 import random
+from re import M
 from tkinter import *
+import matplotlib.pyplot as plt
+import numpy as np
+
+from matplotlib.pyplot import plot
 from classes.Camera import Camera
 from classes.Printer import Printer
 from classes.SetCamera import SetCamera
@@ -8,8 +13,9 @@ TAM_POPULACAO = 20
 TAM_INDIVIDUO = 20
 X_MAX = 500
 Y_MAX = 500
-TAXA_MUTACAO = 0.05 # 5%
+TAXA_MUTACAO = 0.02 # 5%
 
+maioresFits = []
 
 # Gera populacao inicial
 def gerarPopulacao():
@@ -59,6 +65,10 @@ def selecionaPai(populacao):
             selecionado = s
             maiorFitness = s.fitness
 
+    print(maiorFitness)
+
+    maioresFits.insert(len(maioresFits), maiorFitness)
+
     return selecionado
 
 
@@ -88,10 +98,11 @@ def cruza(pai, mae):
     for j in range(0, TAM_INDIVIDUO): 
         cameraPai = pai.cameras[j]
         cameraMae = mae.cameras[j]
+        escolhido = random.choice([cameraPai, cameraMae])
 
-        x = random.choice([cameraPai.x, cameraMae.x])
-        y = random.choice([cameraPai.y, cameraMae.y])
-        angulo = random.choice([cameraPai.a, cameraMae.a])
+        x = escolhido.x
+        y = escolhido.y
+        angulo = escolhido.a
 
         c = Camera(x, y, angulo)
         cameras.insert(j, c)
@@ -131,7 +142,11 @@ def start(populacao):
     mae = selecionaMae(populacao)
     novaPopulacao = gerarNovaPopulacao(pai, mae)
 
-    start(novaPopulacao)
+    if (len(maioresFits) < 50):
+        start(novaPopulacao)
+    else:
+        plt.plot(maioresFits)
+        plt.show()
 
 
 if __name__ == '__main__':
